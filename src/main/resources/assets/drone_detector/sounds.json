@@ -1,0 +1,8 @@
+{
+  "detector_beep": {
+    "subtitle": "subtitles.drone_detector.detector_beep",
+    "sounds": [
+      { "name": "drone_detector:detector_beep", "stream": false }
+    ]
+  }
+}

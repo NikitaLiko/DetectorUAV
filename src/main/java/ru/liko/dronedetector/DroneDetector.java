@@ -9,19 +9,19 @@ import ru.liko.dronedetector.client.ClientConfig;
 import ru.liko.dronedetector.common.ServerConfig;
 import ru.liko.dronedetector.net.DDNetwork;
 import ru.liko.dronedetector.registry.ModItems;
+import ru.liko.dronedetector.registry.ModSounds; // <--
 
 @Mod(DDConstants.MODID)
 public final class DroneDetector {
     public DroneDetector() {
-        // Регистрация реестров
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModItems.register(modBus); // только предметы
 
-        // Конфиги
+        ModItems.register(modBus);
+        ModSounds.register(modBus); // <-- добавили
+
         ServerConfig.register();
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientConfig::register);
 
-        // Сетевой канал (для синка серверных значений вроде range)
         DDNetwork.register();
     }
 }

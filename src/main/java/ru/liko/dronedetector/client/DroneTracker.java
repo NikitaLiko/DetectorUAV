@@ -8,11 +8,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+
 import ru.liko.dronedetector.common.DroneTags;
 import ru.liko.dronedetector.common.ServerValues;
 import ru.liko.dronedetector.item.DroneDetectorItem;
+import ru.liko.dronedetector.registry.ModSounds;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -31,7 +34,7 @@ public final class DroneTracker {
         Target(Entity e, Player player) {
             this.id = e.getUUID();
             this.entity = e;
-            this.name = e.getDisplayName().getString();
+            this.name = e.getDisplayName().getString(); // динамическое имя (SBW меняет — мы видим)
             this.distance = e.distanceTo(player);
             var vec = e.position().subtract(player.position());
             float yawTo = (float)(Mth.atan2(vec.z, vec.x) * (180f/Math.PI)) - 90f;
@@ -47,20 +50,33 @@ public final class DroneTracker {
 
     public List<Target> getSnapshotLimited(int limit) {
         if (snapshot.size() <= limit) return Collections.unmodifiableList(snapshot);
-        return Collections.unmodifiableList(snapshot.subList(0, limit));
+        return Collections.unmodifiableList(snapshot.subList(0, Math.max(0, limit)));
     }
 
     public Optional<Target> getNearest() {
         return snapshot.isEmpty() ? Optional.empty() : Optional.of(snapshot.get(0));
     }
 
-    /** Активный детектор в любой руке. */
+    /** Есть ли включённый детектор в руках ИЛИ в любом слоте инвентаря. */
     public static boolean hasActiveDetector(Player p) {
         if (p == null) return false;
-        var main = p.getMainHandItem();
-        var off  = p.getOffhandItem();
-        return (main.getItem() instanceof DroneDetectorItem && DroneDetectorItem.isActive(main)) ||
-                (off.getItem()  instanceof DroneDetectorItem && DroneDetectorItem.isActive(off));
+
+        // 1) Обе руки
+        ItemStack main = p.getMainHandItem();
+        if (main.getItem() instanceof DroneDetectorItem && DroneDetectorItem.isActive(main)) return true;
+
+        ItemStack off = p.getOffhandItem();
+        if (off.getItem() instanceof DroneDetectorItem && DroneDetectorItem.isActive(off)) return true;
+
+        // 2) Весь инвентарь (горячая панель + основная сетка)
+        var inv = p.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack st = inv.getItem(i);
+            if (st.getItem() instanceof DroneDetectorItem && DroneDetectorItem.isActive(st)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void tick(Minecraft mc) {
@@ -68,7 +84,7 @@ public final class DroneTracker {
         var level  = mc.level;
         if (player == null || level == null) return;
 
-        // Сканиуем и пищим только когда предмет в руке и включён
+        // Сканируем/пищим только если есть включённый детектор (в руке или инвентаре)
         if (!hasActiveDetector(player)) {
             snapshot.clear();
             nearestId = null;
@@ -117,9 +133,14 @@ public final class DroneTracker {
 
         float volume = ClientConfig.BEEP_VOLUME.get().floatValue();
 
+        // Forge 1.20.1: у RegistryObject нет getOptional(); используем isPresent()/get()
+        var sound = ModSounds.DETECTOR_BEEP.isPresent()
+                ? ModSounds.DETECTOR_BEEP.get()
+                : SoundEvents.NOTE_BLOCK_HAT.value();
+
         level.playLocalSound(
                 player.getX(), player.getY(), player.getZ(),
-                SoundEvents.NOTE_BLOCK_HAT.value(), // Holder<SoundEvent> -> SoundEvent
+                sound,
                 SoundSource.PLAYERS,
                 volume, pitch, false
         );
@@ -131,8 +152,10 @@ public final class DroneTracker {
         ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(e.getType());
         if (key == null) return false;
 
+        // 1) Тег с целями (расширяешь дата-паком)
         if (e.getType().is(DroneTags.DRONE_TARGETS)) return true;
 
+        // 2) Фоллбэк по namespace/id для Superb Warfare
         String ns = key.getNamespace();
         String path = key.getPath();
         return (ns.equals("sbw") || ns.equals("superbwarfare")) && path.contains("drone");
