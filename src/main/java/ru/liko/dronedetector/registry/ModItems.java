@@ -1,12 +1,8 @@
 package ru.liko.dronedetector.registry;
 
 import ru.liko.dronedetector.DroneDetectorMod;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -16,7 +12,7 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, DroneDetectorMod.MOD_ID);
 
     public static final RegistryObject<Item> DRONE_DETECTOR = REGISTER.register(
-            "drone_detector",
+            "data/drone_detector",
             () -> new DroneDetectorItem(new Item.Properties().stacksTo(1))
     );
 

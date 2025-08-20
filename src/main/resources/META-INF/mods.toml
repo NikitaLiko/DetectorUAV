@@ -1,26 +1,25 @@
 modLoader="javafml"
 loaderVersion="[47,)"
-license="MIT"
+license="Apache-2.0"
 
 [[mods]]
-modId="drone_detector"
-version="1.0.0"
-displayName="Drone Detector"
-authors="Liko"
-description='''
-Detector for UAVs. Beeps when a drone is in range.
-'''
+modId="drone_detector"             # <-- ТОЛЬКО это имя
+version="${file.jarVersion}"
+displayName="DetectorUAV"
+authors="NikitaLiko"
+description='''Client/server drone detector companion'''
+
+# Зависимости ОБЯЗАТЕЛЬНО с заголовком [[dependencies.drone_detector]]
+[[dependencies.drone_detector]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
 
 [[dependencies.drone_detector]]
-    modId="forge"
-    mandatory=true
-    versionRange="[47,)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.drone_detector]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.20.1]"
-    ordering="NONE"
-    side="BOTH"
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"

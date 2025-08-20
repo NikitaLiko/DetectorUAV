@@ -3,5 +3,6 @@
   "item.drone_detector.drone_detector": "Детектор БПЛА",
   "item.drone_detector.drone_detector.on": "Детектор: ВКЛ",
   "item.drone_detector.drone_detector.off": "Детектор: ВЫКЛ",
-  "block.drone_detector.drone_detector_block": "Детектор БПЛА (блок)"
+  "block.drone_detector.drone_detector_block": "Детектор БПЛА (блок)",
+  "overlay.drone_detector.title": "Дроны поблизости"
 }

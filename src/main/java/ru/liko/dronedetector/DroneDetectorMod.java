@@ -11,7 +11,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(DroneDetectorMod.MOD_ID)
 public class DroneDetectorMod {
-    public static final String MOD_ID = "drone_detector";
+    public static final String MOD_ID = "data/drone_detector";
 
     public DroneDetectorMod() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();

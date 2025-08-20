@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "sbw:fpv_drone",
+    "sbw:swarm_drone",
+    "superbwarfare:fpv_drone"
+  ]
+}
