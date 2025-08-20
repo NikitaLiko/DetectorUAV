@@ -1,0 +1,7 @@
+{
+  "item.drone_detector.drone_detector": "无人机探测器",
+  "item.drone_detector.state_on": "探测器：开启",
+  "item.drone_detector.state_off": "探测器：关闭",
+  "item.drone_detector.tooltip_on": "§a已开启。右键关闭",
+  "item.drone_detector.tooltip_off": "§7已关闭。右键开启"
+}

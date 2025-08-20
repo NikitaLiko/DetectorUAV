@@ -1,0 +1,7 @@
+{
+  "item.drone_detector.drone_detector": "UAV Detector",
+  "item.drone_detector.state_on": "Detector: ON",
+  "item.drone_detector.state_off": "Detector: OFF",
+  "item.drone_detector.tooltip_on": "§aOn. Right-click to turn off",
+  "item.drone_detector.tooltip_off": "§7Off. Right-click to turn on"
+}
