@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '6.0.43'
+}
+
+group = 'com.example'
+version = '1.0.0'
+archivesBaseName = 'drone_detector'
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    copyIdeResources = true
+    runs {
+        client { workingDirectory project.file('run'); mods { drone_detector { source sourceSets.main } } }
+        server { workingDirectory project.file('run'); mods { drone_detector { source sourceSets.main } } }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.minecraftforge.net' }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+}
+
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }

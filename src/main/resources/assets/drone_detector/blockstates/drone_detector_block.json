@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "powered=false": [
+      {
+        "model": "drone_detector:block/drone_detector_block"
+      }
+    ],
+    "powered=true": [
+      {
+        "model": "drone_detector:block/drone_detector_block"
+      }
+    ]
+  }
+}
