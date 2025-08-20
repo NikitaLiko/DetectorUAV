@@ -1,6 +1,8 @@
 package ru.liko.dronedetector.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -8,11 +10,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-
 import ru.liko.dronedetector.common.DroneTags;
 import ru.liko.dronedetector.common.ServerValues;
+import ru.liko.dronedetector.item.DroneDetectorItem;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -54,10 +54,27 @@ public final class DroneTracker {
         return snapshot.isEmpty() ? Optional.empty() : Optional.of(snapshot.get(0));
     }
 
+    /** Активный детектор в любой руке. */
+    public static boolean hasActiveDetector(Player p) {
+        if (p == null) return false;
+        var main = p.getMainHandItem();
+        var off  = p.getOffhandItem();
+        return (main.getItem() instanceof DroneDetectorItem && DroneDetectorItem.isActive(main)) ||
+                (off.getItem()  instanceof DroneDetectorItem && DroneDetectorItem.isActive(off));
+    }
+
     public void tick(Minecraft mc) {
         var player = mc.player;
         var level  = mc.level;
         if (player == null || level == null) return;
+
+        // Сканиуем и пищим только когда предмет в руке и включён
+        if (!hasActiveDetector(player)) {
+            snapshot.clear();
+            nearestId = null;
+            beepCooldownTicks = 0;
+            return;
+        }
 
         double range = ServerValues.getRange();
         boolean onlyNearestBeep = ClientConfig.ONLY_NEAREST_BEEP.get();

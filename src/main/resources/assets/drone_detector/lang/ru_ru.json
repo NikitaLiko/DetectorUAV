@@ -1,8 +1,7 @@
 {
-  "itemGroup.drone_detector": "SBW · Детектор",
   "item.drone_detector.drone_detector": "Детектор БПЛА",
-  "item.drone_detector.drone_detector.on": "Детектор: ВКЛ",
-  "item.drone_detector.drone_detector.off": "Детектор: ВЫКЛ",
-  "block.drone_detector.drone_detector_block": "Детектор БПЛА (блок)",
-  "overlay.drone_detector.title": "Дроны поблизости"
+  "item.drone_detector.state_on": "Детектор: ВКЛ",
+  "item.drone_detector.state_off": "Детектор: ВЫКЛ",
+  "item.drone_detector.tooltip_on": "§aВключён. ПКМ — выключить",
+  "item.drone_detector.tooltip_off": "§7Выключен. ПКМ — включить"
 }
