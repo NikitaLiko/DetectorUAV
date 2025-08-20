@@ -14,7 +14,8 @@ public record S2CServerSettings(double range) {
         return new S2CServerSettings(buf.readDouble());
     }
     public static void handle(S2CServerSettings msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ServerValues.setRange(msg.range()));
-        ctx.get().setPacketHandled(true);
+        NetworkEvent.Context c = ctx.get();
+        c.enqueueWork(() -> ServerValues.setRange(msg.range()));
+        c.setPacketHandled(true);
     }
 }

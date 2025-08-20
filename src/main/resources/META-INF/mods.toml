@@ -3,13 +3,13 @@ loaderVersion="[47,)"
 license="Apache-2.0"
 
 [[mods]]
-modId="drone_detector"             # <-- ТОЛЬКО это имя
+modId="drone_detector"             # ← ваш modid
 version="${file.jarVersion}"
 displayName="DetectorUAV"
 authors="NikitaLiko"
 description='''Client/server drone detector companion'''
 
-# Зависимости ОБЯЗАТЕЛЬНО с заголовком [[dependencies.drone_detector]]
+# Зависимости прописываются ТОЛЬКО под id вашего мода:
 [[dependencies.drone_detector]]
 modId="forge"
 mandatory=true
