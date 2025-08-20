@@ -1,11 +1,11 @@
 package ru.liko.dronedetector.registry;
 
-import ru.liko.dronedetector.DroneDetectorMod;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import ru.liko.dronedetector.DDConstants;
 
 public class ModItems {
     public static final DeferredRegister<Item> REGISTER =

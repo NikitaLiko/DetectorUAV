@@ -1,6 +1,5 @@
 package ru.liko.dronedetector.registry;
 
-import ru.liko.dronedetector.DroneDetectorMod;
 import ru.liko.dronedetector.content.block.DroneDetectorBlock;
 import ru.liko.dronedetector.content.blockentity.DroneDetectorBlockEntity;
 import net.minecraft.world.item.BlockItem;
@@ -13,11 +12,15 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import ru.liko.dronedetector.DDConstants;
 
 public class ModBlocks {
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, DroneDetectorMod.MOD_ID);
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DroneDetectorMod.MOD_ID);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, DroneDetectorMod.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS =
+            DeferredRegister.create(ForgeRegistries.BLOCKS, DDConstants.MODID);
+    public static final DeferredRegister<Item> ITEMS =
+            DeferredRegister.create(ForgeRegistries.ITEMS, DDConstants.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, DDConstants.MODID);
 
     public static final RegistryObject<Block> DRONE_DETECTOR_BLOCK = BLOCKS.register("drone_detector_block", () ->
             new DroneDetectorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0f, 6.0f).lightLevel(s -> s.getValue(BlockStateProperties.POWERED) ? 7 : 0))
