@@ -1,10 +1,18 @@
+// settings.gradle  — ВАЖНО: pluginManagement первым и единственным
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://maven.minecraftforge.net' }                     // для ForgeGradle
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' } // для Sponge Mixin плагина
+        mavenCentral()
+        mavenLocal()
     }
 }
+
+// Это plugins ДЛЯ settings.gradle (оставляем foojay-резолвер от MDK)
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
 }
+
+// Имя корневого проекта — после plugins {}
 rootProject.name = 'drone_detector'

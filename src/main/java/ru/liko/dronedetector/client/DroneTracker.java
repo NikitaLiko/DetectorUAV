@@ -11,10 +11,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import ru.liko.dronedetector.item.DroneDetectorItem;
 
 import ru.liko.dronedetector.common.DroneTags;
 import ru.liko.dronedetector.common.ServerValues;
-import ru.liko.dronedetector.item.DroneDetectorItem;
 import ru.liko.dronedetector.registry.ModSounds;
 
 import java.util.*;
