@@ -23,3 +23,10 @@ mandatory=true
 versionRange="[1.20.1,1.21)"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.drone_detector]]
+modId = "superbwarfare"
+mandatory = true
+versionRange = "[0.8.7]"
+ordering = "AFTER"
+side = "BOTH"

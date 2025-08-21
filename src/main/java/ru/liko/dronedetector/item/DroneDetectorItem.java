@@ -23,43 +23,71 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class DroneDetectorItem extends Item implements GeoItem {
+    /** Ключ NBT для состояния "включено/выключено" */
     private static final String ACTIVE_TAG = "active";
 
-    // Имена должны совпадать с именами клипов в animations/*.animation.json
+    /** Имена анимаций должны совпадать с ключами в animations/*.animation.json */
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
     private static final RawAnimation PING = RawAnimation.begin().thenPlay("ping");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public DroneDetectorItem(Properties props) {
-        super(props);
-        // Включаем синхронизацию анимаций для предмета
+        super(props.stacksTo(1));
+        // Разрешаем синхронизацию триггеров анимации для предмета
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
-    // Для твоего DroneTracker
+    /* =======================
+       Состояние "включено"
+       ======================= */
+
+    /** Включена ли "рация" у данного стака */
     public static boolean isActive(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         return tag.getBoolean(ACTIVE_TAG);
     }
+
+    /** Установить состояние */
     public static void setActive(ItemStack stack, boolean value) {
         stack.getOrCreateTag().putBoolean(ACTIVE_TAG, value);
     }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "main", 0, state -> state.setAndContinue(IDLE))
-                .triggerableAnim("ping", PING));
+    /** Переключить состояние и вернуть новое значение */
+    public static boolean toggle(ItemStack stack) {
+        boolean now = !isActive(stack);
+        setActive(stack, now);
+        return now;
     }
 
-    // Регистрация рендера предмета через IClientItemExtensions (Forge 1.19.3–1.20.6)
+    /* =======================
+       GeckoLib: контроллеры
+       ======================= */
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(
+                new AnimationController<>(this, "main", 0, state -> state.setAndContinue(IDLE))
+                        .triggerableAnim("ping", PING)
+        );
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+
+    /* =======================
+       Рендерер предмета (BEWLR)
+       ======================= */
+
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             private BlockEntityWithoutLevelRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() { // см. Forge Docs про BEWLR
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (renderer == null) {
                     renderer = new ru.liko.dronedetector.client.render.item.DroneDetectorItemRenderer();
                 }
@@ -68,21 +96,23 @@ public class DroneDetectorItem extends Item implements GeoItem {
         });
     }
 
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
-    }
+    /* =======================
+       ЛКМ/ПКМ поведение
+       ======================= */
 
-    // ПКМ: переключаем состояние + проигрываем короткую анимацию "ping"
+    /** ПКМ по воздуху: переключаем флаг и коротко проигрываем "ping" */
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+
         if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
-            boolean newState = !isActive(stack);
-            setActive(stack, newState);
+            boolean on = toggle(stack); // меняем NBT-флаг "active"
+
+            // Тригерим короткую анимацию (имя контроллера и триггера должно совпадать с registerControllers)
             long id = GeoItem.getOrAssignId(stack, serverLevel);
             this.triggerAnim(player, id, "main", "ping");
         }
+
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
 }
